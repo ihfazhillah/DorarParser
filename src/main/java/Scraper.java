@@ -2,6 +2,9 @@
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,16 +12,18 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+
 
 public class Scraper {
     private String baseUrl = "https://dorar.net/dorar_api.json";
-    URL url;
+    private URL url;
 
     public  Scraper(String key) throws MalformedURLException {
         url = new URL(baseUrl + "?skeys=" + key);
     }
 
-    public String getResponse(){
+    private String getResponse(){
         StringBuilder content = new StringBuilder();
 
         try {
@@ -38,7 +43,7 @@ public class Scraper {
         return content.toString();
     }
 
-    public String getHTML(String resp) throws ParseException {
+    private String getHTML(String resp) throws ParseException {
 
         JSONParser parser = new JSONParser();
         Object obj = parser.parse(resp);
@@ -50,14 +55,32 @@ public class Scraper {
         return (String)ahadith.get("result");
     }
 
-    public static String getResultArray(){
-        return "";
+    private ArrayList<Hadith> getResultArray(String html){
+        Document doc = Jsoup.parse(html);
+
+        Elements hadith = doc.select(".hadith");
+        Elements hadithInfo = doc.select(".hadith-info");
+
+        ArrayList<Hadith> results = new ArrayList<>();
+
+        int i = 0;
+        for (;i<hadith.size(); i++){
+            Hadith h = new Hadith();
+            h.setInfo(hadithInfo.get(i).html());
+            h.setText(hadith.get(i).html());
+            results.add(h);
+        }
+        return results;
+    }
+
+    public ArrayList<Hadith> getResults() throws ParseException {
+        String resp = getResponse();
+        String html = getHTML(resp);
+        return getResultArray(html);
     }
 
     public static void main (String[] args) throws IOException, ParseException {
         Scraper scraper = new Scraper("تسعى");
-        String resp = scraper.getResponse();
-        String html = scraper.getHTML(resp);
-        System.out.println(html);
+        System.out.println(scraper.getResults().get(0).getInfo());
     }
 }
