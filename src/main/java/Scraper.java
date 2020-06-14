@@ -6,21 +6,20 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import javax.management.Query;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.util.ArrayList;
 
 
 public class Scraper {
-    private String baseUrl = "https://dorar.net/dorar_api.json";
     private URL url;
 
-    public  Scraper(String key) throws MalformedURLException {
-        url = new URL(baseUrl + "?skeys=" + key);
+    public  Scraper(String key) throws MalformedURLException, URISyntaxException {
+        URI uri = new URI("https", null, "//dorar.net/dorar_api.json", "skey=" + key, null);
+        url = uri.toURL();
     }
 
     private String getResponse(){
@@ -79,7 +78,7 @@ public class Scraper {
         return getResultArray(html);
     }
 
-    public static void main (String[] args) throws IOException, ParseException {
+    public static void main (String[] args) throws IOException, ParseException, URISyntaxException {
         Scraper scraper = new Scraper("تسعى");
         System.out.println(scraper.getResults().get(0).getInfo());
     }
