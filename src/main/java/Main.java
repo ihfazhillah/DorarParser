@@ -16,7 +16,7 @@ public class Main {
         // this will return raw results
         System.out.println(dorar.getRawResults().toString());
         // this will return text results
-//        dorar.getTextResults();
+        System.out.println(dorar.getTextResults().toString());
 //        // this will return parsed results
 //        dorar.getParsedResults();
     }
