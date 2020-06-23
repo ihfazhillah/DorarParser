@@ -14,10 +14,10 @@ public class Main {
         // 3. array of object with text, search_result boolean attribute
         Dorar dorar = new Dorar("اللهُمَّ بيِّضْ وَجهي يومَ تسوَدُّ");
         // this will return raw results
-        System.out.println(dorar.getRawResults().toString());
+//        System.out.println(dorar.getRawResults().toString());
         // this will return text results
-        System.out.println(dorar.getTextResults().toString());
+//        System.out.println(dorar.getTextResults().toString());
 //        // this will return parsed results
-//        dorar.getParsedResults();
+        dorar.getParsedResults();
     }
 }
